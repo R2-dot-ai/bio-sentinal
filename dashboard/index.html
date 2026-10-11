@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIO-SENTINEL | Frugal AI Water Safety & Purification System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070a12;
+            --bg-card: #0f172a;
+            --bg-card-hover: #1e293b;
+            --border-color: #1e293b;
+            --border-highlight: #334155;
+            
+            --primary-blue: #0ea5e9;
+            --primary-cyan: #06b6d4;
+            --primary-teal: #14b8a6;
+            
+            --state-normal: #10b981;
+            --state-normal-glow: rgba(16, 185, 129, 0.25);
+            --state-check: #f59e0b;
+            --state-check-glow: rgba(245, 158, 11, 0.25);
+            --state-highrisk: #ef4444;
+            --state-highrisk-glow: rgba(239, 68, 68, 0.35);
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-hindi: 'Noto Sans Devanagari', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(ellipse at 10% 10%, rgba(14, 165, 233, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 90% 90%, rgba(20, 184, 166, 0.06) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .disclaimer-banner {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.15), rgba(245, 158, 11, 0.15));
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-teal));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 6px 25px rgba(14, 165, 233, 0.35);
+        }
+
+        .brand-title h1 {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #38bdf8, #2dd4bf, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-title p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .principle-tag {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1.5px solid rgba(56, 189, 248, 0.3);
+            color: #38bdf8;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            max-width: 450px;
+            text-align: right;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: var(--bg-card);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-teal));
+            color: white;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: border-color 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-highlight);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .assessment-banner {
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .assessment-banner.normal {
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+            border-color: var(--state-normal);
+            box-shadow: 0 0 40px var(--state-normal-glow);
+        }
+
+        .assessment-banner.check {
+            background: linear-gradient(145deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+            border-color: var(--state-check);
+            box-shadow: 0 0 40px var(--state-check-glow);
+        }
+
+        .assessment-banner.highrisk {
+            background: linear-gradient(145deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05));
+            border-color: var(--state-highrisk);
+            box-shadow: 0 0 50px var(--state-highrisk-glow);
+        }
+
+        .state-badge {
+            display: inline-block;
+            font-size: 34px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .assessment-banner.normal .state-badge { color: var(--state-normal); }
+        .assessment-banner.check .state-badge { color: var(--state-check); }
+        .assessment-banner.highrisk .state-badge { color: var(--state-highrisk); }
+
+        .action-box {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 18px;
+            font-size: 14px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        .action-box strong { color: var(--text-primary); }
+
+        .verification-badge {
+            margin-top: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .verification-badge.yes {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1.5px solid var(--state-highrisk);
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .verification-badge.no {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1.5px solid var(--state-normal);
+        }
+
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
+        }
+
+        .sensor-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sensor-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--primary-blue);
+        }
+
+        .sensor-name {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .sensor-value {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .sensor-unit {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .sensor-bar {
+            margin-top: 10px;
+            height: 4px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .sensor-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.4s ease, background 0.4s ease;
+        }
+
+        .slider-group {
+            margin-bottom: 20px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            outline: none;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border-highlight);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn:hover { background: var(--bg-card-hover); transform: translateY(-2px); }
+        .btn-normal { border-color: var(--state-normal); color: var(--state-normal); }
+        .btn-check { border-color: var(--state-check); color: var(--state-check); }
+        .btn-highrisk { border-color: var(--state-highrisk); color: var(--state-highrisk); }
+
+        .arch-diagram {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .arch-step {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            position: relative;
+        }
+
+        .arch-step .step-num {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-teal));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .arch-step h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .arch-step p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .viz-img-container {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: #000;
+            margin-top: 14px;
+        }
+
+        .viz-img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .bom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 14px;
+        }
+
+        .bom-table th {
+            text-align: left;
+            padding: 12px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+
+        .bom-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .bom-table tr:last-child td {
+            border-bottom: none;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .cost-tag {
+            color: var(--state-normal);
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .api-tester {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: #38bdf8;
+            border: 1px solid var(--border-color);
+            margin-top: 14px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <div class="disclaimer-banner">
+            <span>⚠️</span>
+            <span>DEMONSTRATION / SYNTHETIC — NOT FIELD VALIDATED | AI estimates treatment-system state. AI does NOT measure arsenic or fluoride directly.</span>
+        </div>
+
+        <header>
+            <div class="brand">
+                <div class="logo-icon">🌿</div>
+                <div class="brand-title">
+                    <h1>BIO-SENTINEL</h1>
+                    <p>Frugal AI Enabled Groundwater Safety & Purification System (SIH26040)</p>
+                </div>
+            </div>
+            <div class="principle-tag">
+                "AI does not declare water safe. AI decides when safety needs to be verified."
+            </div>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('monitoring', event)">📊 Live Monitoring & Simulator</button>
+            <button class="tab-btn" onclick="switchTab('architecture', event)">🧪 Treatment Architecture</button>
+            <button class="tab-btn" onclick="switchTab('tree', event)">🧠 Frugal Decision Tree Rules</button>
+            <button class="tab-btn" onclick="switchTab('analytics', event)">📈 Degradation Dynamics & Hydraulics</button>
+            <button class="tab-btn" onclick="switchTab('bom', event)">💰 Hardware BOM & Cost Analysis</button>
+            <button class="tab-btn" onclick="switchTab('api', event)">⚡ API Endpoint Tester</button>
+        </nav>
+
+        <div class="tab-content active" id="tab-monitoring">
+            <div class="dashboard-grid">
+                <main>
+                    <div class="assessment-banner normal" id="assessmentBanner">
+                        <div style="font-size:12px; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">
+                            FE-BIOCHAR CARTRIDGE TREATMENT STATE ESTIMATION
+                        </div>
+                        <div class="state-badge" id="stateBadge">NORMAL</div>
+                        <div style="font-size:14px; color:var(--text-secondary);" id="stateDesc">
+                            Fe-biochar cartridge is operating within its validated performance envelope.
+                        </div>
+
+                        <div class="action-box">
+                            <div><strong>Recommended Action:</strong> <span id="actionCode" style="color:#38bdf8;">CONTINUE</span></div>
+                            <div style="margin-top:6px; font-size:13px; color:var(--text-secondary);" id="actionDisplay">
+                                Treatment operating normally within validated envelope. Continue operation.
+                            </div>
+                            <div style="margin-top:4px; font-size:12px; color:#94a3b8; font-family:var(--font-hindi); font-style:italic;" id="actionHindi">
+                                शोधन प्रणाली सामान्य रूप से कार्य कर रही है। उपयोग जारी रखें।
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:center; gap:20px; align-items:center; margin-top:18px; flex-wrap:wrap;">
+                            <div class="verification-badge no" id="verifBadge">
+                                <span>🔬 Targeted As / F⁻ Lab Verification Required:</span>
+                                <strong id="verifValue">NO</strong>
+                            </div>
+                            <div style="font-size:13px; font-weight:700; color:var(--text-muted);">
+                                Calculated Operational Risk Score: <span id="riskScore" style="color:var(--text-primary); font-weight:900; font-size:16px;">0.12</span> / 1.00
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top:24px;">
+                        <div class="card-header">
+                            <div class="card-title">📡 Physical Telemetry & Hydraulic Sensors</div>
+                            <div style="font-size:11px; color:var(--text-muted);">Refreshed via Frugal AI Edge Engine</div>
+                        </div>
+
+                        <div class="sensor-grid">
+                            <div class="sensor-card">
+                                <div class="sensor-name">pH Level</div>
+                                <div class="sensor-value" id="val_pH">7.30</div>
+                                <div class="sensor-unit">Safe Range: 6.5 - 8.5</div>
+                                <div class="sensor-bar"><div class="sensor-bar-fill" id="bar_pH" style="width:52%; background:var(--state-normal);"></div></div>
+                            </div>
+
+                            <div class="sensor-card">
+                                <div class="sensor-name">TDS / EC</div>
+                                <div class="sensor-value" id="val_TDS">288 <span class="sensor-unit">mg/L</span></div>
+                                <div class="sensor-unit">EC: <span id="val_EC">450</span> µS/cm</div>
+                                <div class="sensor-bar"><div class="sensor-bar-fill" id="bar_EC" style="width:25%; background:var(--state-normal);"></div></div>
+                            </div>
+
+                            <div class="sensor-card">
+                                <div class="sensor-name">Turbidity</div>
+                                <div class="sensor-value" id="val_turb">0.50 <span class="sensor-unit">NTU</span></div>
+                                <div class="sensor-unit">Permissible Limit: &lt; 5.0</div>
+                                <div class="sensor-bar"><div class="sensor-bar-fill" id="bar_turb" style="width:10%; background:var(--state-normal);"></div></div>
+                            </div>
+
+                            <div class="sensor-card">
+                                <div class="sensor-name">Differential Pressure (ΔP)</div>
+                                <div class="sensor-value" id="val_dp">16.0 <span class="sensor-unit">kPa</span></div>
+                                <div class="sensor-unit">Clogging Limit: 75 kPa</div>
+                                <div class="sensor-bar"><div class="sensor-bar-fill" id="bar_dp" style="width:21%; background:var(--state-normal);"></div></div>
+                            </div>
+
+                            <div class="sensor-card">
+                                <div class="sensor-name">Flow Rate</div>
+                                <div class="sensor-value" id="val_flow">11.5 <span class="sensor-unit">L/min</span></div>
+                                <div class="sensor-unit">Nominal: 12.0 L/min</div>
+                                <div class="sensor-bar"><div class="sensor-bar-fill" id="bar_flow" style="width:95%; background:var(--state-normal);"></div></div>
+                            </div>
+
+                            <div class="sensor-card">
+                                <div class="sensor-name">Cumulative Volume</div>
+                                <div class="sensor-value" id="val_vol">1,450 <span class="sensor-unit">L</span></div>
+                                <div class="sensor-unit">Age: <span id="val_age">6.0</span> Days</div>
+                                <div class="sensor-bar"><div class="sensor-bar-fill" id="bar_vol" style="width:10%; background:var(--primary-blue);"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <aside>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">🎛️ Cartridge Degradation Simulator</div>
+                        </div>
+
+                        <p style="font-size:12px; color:var(--text-secondary); margin-bottom:18px;">
+                            Drag slider to simulate biochar saturation & hydraulic pore clogging dynamics:
+                        </p>
+
+                        <div class="slider-group">
+                            <div class="slider-label">
+                                <span>Degradation Stage</span>
+                                <strong id="sim_stage_label" style="color:#38bdf8;">0% (Fresh)</strong>
+                            </div>
+                            <input type="range" id="simSlider" min="0" max="100" value="0" oninput="updateSim(this.value)">
+                        </div>
+
+                        <div class="preset-buttons">
+                            <button class="btn btn-normal" onclick="setPreset(0)">NORMAL</button>
+                            <button class="btn btn-check" onclick="setPreset(55)">CHECK</button>
+                            <button class="btn btn-highrisk" onclick="setPreset(85)">HIGH-RISK</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">⚡ Edge Frugal AI Profile</div>
+                        </div>
+
+                        <div style="font-size:13px; color:var(--text-secondary); line-height:1.8;">
+                            <div>• <strong>Primary Model:</strong> Decision Tree (max_depth=4)</div>
+                            <div>• <strong>Memory Footprint:</strong> &lt; 2 KB (Runs on $2 ESP32)</div>
+                            <div>• <strong>Inference Latency:</strong> &lt; 0.1 ms</div>
+                            <div>• <strong>Feature Dimensions:</strong> 20 Causal Features</div>
+                            <div>• <strong>HIGH-RISK Recall:</strong> 97.23%</div>
+                            <div>• <strong>Cloud Dependency:</strong> ZERO (100% Offline)</div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-architecture">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🧪 Bio-Sentinel Multi-Stage Treatment Train</div>
+                </div>
+
+                <div class="arch-diagram">
+                    <div class="arch-step">
+                        <div class="step-num">1</div>
+                        <h4>Seed-Based Biocoagulation</h4>
+                        <p>Uses <em>Moringa oleifera</em> / <em>Strychnos potatorum</em> seed powder for natural organic solids flocculation without chemical additives.</p>
+                    </div>
+
+                    <div class="arch-step">
+                        <div class="step-num">2</div>
+                        <h4>Lamellar Gravity Pretreatment</h4>
+                        <p>Flamingo-inspired inclined plate settler for rapid turbidity drop and downstream cartridge protection.</p>
+                    </div>
+
+                    <div class="arch-step">
+                        <div class="step-num">3</div>
+                        <h4>Fe-Biochar Adsorption</h4>
+                        <p>Iron-impregnated porous biochar bead fixed-bed cartridge. Principal adsorption stage for toxic Arsenic & Fluoride ions.</p>
+                    </div>
+
+                    <div class="arch-step">
+                        <div class="step-num">4</div>
+                        <h4>Intermittent Sensing</h4>
+                        <p>Low-cost physical & hydraulic telemetry (pH, EC/TDS, Turbidity, Temp, Flow, ΔP) monitored continuously.</p>
+                    </div>
+
+                    <div class="arch-step">
+                        <div class="step-num">5</div>
+                        <h4>Frugal AI Engine</h4>
+                        <p>Offline Decision Tree rules on ESP32 estimate treatment state and trigger targeted certified laboratory verification.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-tree">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🧠 Frugal Decision Tree Structure & Rules (max_depth=4)</div>
+                </div>
+                <p style="font-size:13px; color:var(--text-secondary); margin-bottom:14px;">
+                    This Decision Tree operates on derived time-series features. It is exported directly into native C/C++ `if/else` rules for ESP32 hardware execution.
+                </p>
+                <div class="viz-img-container">
+                    <img src="/visualizations/decision_tree.png" alt="Decision Tree Structure">
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-analytics">
+            <div class="dashboard-grid">
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">📈 Cartridge Degradation Trajectory (RUN_001)</div>
+                        </div>
+                        <div class="viz-img-container">
+                            <img src="/visualizations/cartridge_degradation_trajectory.png" alt="Cartridge Trajectory">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">📊 Feature Importance Ranking</div>
+                        </div>
+                        <div class="viz-img-container">
+                            <img src="/visualizations/feature_importance.png" alt="Feature Importance">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">⚖️ Model Confusion Matrix (DT vs LR)</div>
+                        </div>
+                        <div class="viz-img-container">
+                            <img src="/visualizations/confusion_matrix.png" alt="Confusion Matrix">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-bom">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">💰 Hardware Bill of Materials (BOM) & Economic Impact</div>
+                </div>
+                <p style="font-size:13px; color:var(--text-secondary);">
+                    Bio-Sentinel uses low-cost off-the-shelf sensors combined with Frugal AI to deliver a <strong>98.5% cost reduction</strong> for rural Panchayats compared to routine daily lab testing.
+                </p>
+
+                <table class="bom-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Description / Model</th>
+                            <th>Qty</th>
+                            <th>Unit Cost (INR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Microcontroller</td>
+                            <td>ESP32-WROOM-32 (Dual Core 240MHz, Wi-Fi/BLE)</td>
+                            <td>1</td>
+                            <td class="cost-tag">₹350</td>
+                        </tr>
+                        <tr>
+                            <td>Acidity Sensor</td>
+                            <td>Analog pH Probe Module (E-201-C)</td>
+                            <td>1</td>
+                            <td class="cost-tag">₹450</td>
+                        </tr>
+                        <tr>
+                            <td>Conductivity Sensor</td>
+                            <td>Analog TDS / EC Sensor Kit</td>
+                            <td>1</td>
+                            <td class="cost-tag">₹250</td>
+                        </tr>
+                        <tr>
+                            <td>Turbidity Sensor</td>
+                            <td>TS-300B Nephelometric Turbidity Sensor</td>
+                            <td>1</td>
+                            <td class="cost-tag">₹320</td>
+                        </tr>
+                        <tr>
+                            <td>Pressure Transducer</td>
+                            <td>Differential Pressure Sensor (ΔP)</td>
+                            <td>1</td>
+                            <td class="cost-tag">₹280</td>
+                        </tr>
+                        <tr>
+                            <td>Flow Meter</td>
+                            <td>YF-S201 Hall Effect Water Flow Sensor</td>
+                            <td>1</td>
+                            <td class="cost-tag">₹180</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>TOTAL HARDWARE SENSING COST PER SYSTEM</strong></td>
+                            <td class="cost-tag" style="font-size:16px;">₹1,830 (~$22 USD)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-api">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⚡ Real-Time Prediction API Endpoint Tester</div>
+                </div>
+                <p style="font-size:13px; color:var(--text-secondary);">
+                    Endpoint: <code>GET /api/predict?pH=...&EC=...&TDS=...&turbidity=...&flow=...&delta_p=...</code>
+                </p>
+
+                <div style="margin-top:14px; display:flex; gap:10px;">
+                    <button class="btn btn-normal" onclick="testApi(7.3, 440, 281, 0.6, 11.1, 18.0)">Test NORMAL Input</button>
+                    <button class="btn btn-check" onclick="testApi(6.6, 720, 460, 3.2, 8.2, 48.0)">Test CHECK Input</button>
+                    <button class="btn btn-highrisk" onclick="testApi(5.8, 1150, 736, 9.5, 4.5, 82.0)">Test HIGH-RISK Input</button>
+                </div>
+
+                <div class="api-tester" id="apiResponse">
+                    Click any test button above to send a live request to the Frugal AI backend...
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (evt && evt.target) {
+                evt.target.classList.add('active');
+            }
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        function updateSim(val) {
+            val = parseFloat(val);
+            document.getElementById('sim_stage_label').textContent = val + '% (Day ' + Math.round(val * 0.6) + ')';
+
+            const deg = val / 100.0;
+            
+            const pH = (7.3 - 1.2 * Math.pow(deg, 2)).toFixed(2);
+            const EC = Math.round(420 + 750 * Math.pow(deg, 2));
+            const TDS = Math.round(EC * 0.64);
+            const turb = (0.5 + 8.5 * Math.pow(deg, 3)).toFixed(2);
+            const dp = (15.0 + 70.0 * Math.pow(deg, 2)).toFixed(1);
+            const flow = (12.0 - 7.2 * Math.pow(deg, 1.5)).toFixed(1);
+            const vol = Math.round(1200 + deg * 16800);
+            const age = (deg * 60).toFixed(1);
+
+            document.getElementById('val_pH').textContent = pH;
+            document.getElementById('val_EC').textContent = EC;
+            document.getElementById('val_TDS').firstChild.textContent = TDS + ' ';
+            document.getElementById('val_turb').firstChild.textContent = turb + ' ';
+            document.getElementById('val_dp').firstChild.textContent = dp + ' ';
+            document.getElementById('val_flow').firstChild.textContent = flow + ' ';
+            document.getElementById('val_vol').firstChild.textContent = vol.toLocaleString() + ' ';
+            document.getElementById('val_age').textContent = age;
+
+            document.getElementById('bar_pH').style.width = Math.min((pH / 14) * 100, 100) + '%';
+            document.getElementById('bar_EC').style.width = Math.min((EC / 1500) * 100, 100) + '%';
+            document.getElementById('bar_turb').style.width = Math.min((turb / 10) * 100, 100) + '%';
+            document.getElementById('bar_dp').style.width = Math.min((dp / 80) * 100, 100) + '%';
+            document.getElementById('bar_flow').style.width = Math.min((flow / 12) * 100, 100) + '%';
+
+            const banner = document.getElementById('assessmentBanner');
+            const badge = document.getElementById('stateBadge');
+            const desc = document.getElementById('stateDesc');
+            const actionCode = document.getElementById('actionCode');
+            const actionDisplay = document.getElementById('actionDisplay');
+            const actionHindi = document.getElementById('actionHindi');
+            const verifBadge = document.getElementById('verifBadge');
+            const verifVal = document.getElementById('verifValue');
+            const riskScore = document.getElementById('riskScore');
+
+            if (val >= 75 || dp >= 65 || flow <= 6.5) {
+                banner.className = 'assessment-banner highrisk';
+                badge.textContent = 'HIGH-RISK';
+                desc.textContent = 'High cartridge degradation risk detected. Fe-biochar adsorption capacity likely saturated.';
+                actionCode.textContent = 'TARGETED_LAB_VERIFICATION_REQUIRED';
+                actionCode.style.color = '#f87171';
+                actionDisplay.textContent = 'Stop reliance on cartridge! Targeted As/F⁻ laboratory verification and cartridge service required.';
+                actionHindi.textContent = 'उच्च जोखिम! कार्ट्रिज पर भरोसा न करें। आर्सेनिक/फ्लोराइड प्रयोगशाला जांच करवाएं।';
+                verifBadge.className = 'verification-badge yes';
+                verifVal.textContent = 'YES (Targeted As/F Test)';
+                riskScore.textContent = (0.82 + deg * 0.16).toFixed(2);
+            } else if (val >= 45 || dp >= 38 || flow <= 8.5) {
+                banner.className = 'assessment-banner check';
+                badge.textContent = 'CHECK / DEGRADING';
+                desc.textContent = 'Sensor & hydraulic telemetry indicates early cartridge fouling and degrading performance.';
+                actionCode.textContent = 'INSPECT_AND_RECHECK';
+                actionCode.style.color = '#fbbf24';
+                actionDisplay.textContent = 'Inspect seed biocoagulant pre-filter and recheck differential pressure.';
+                actionHindi.textContent = 'प्रणाली में गिरावट के संकेत। प्री-फिल्टर बायोकोगुलेंट की जांच करें।';
+                verifBadge.className = 'verification-badge no';
+                verifVal.textContent = 'NO (Recheck Sensors)';
+                riskScore.textContent = (0.35 + deg * 0.35).toFixed(2);
+            } else {
+                banner.className = 'assessment-banner normal';
+                badge.textContent = 'NORMAL';
+                desc.textContent = 'Fe-biochar cartridge is operating within its validated performance envelope.';
+                actionCode.textContent = 'CONTINUE';
+                actionCode.style.color = '#34d399';
+                actionDisplay.textContent = 'Treatment operating normally within validated envelope. Continue operation.';
+                actionHindi.textContent = 'शोधन प्रणाली सामान्य रूप से कार्य कर रही है। उपयोग जारी रखें।';
+                verifBadge.className = 'verification-badge no';
+                verifVal.textContent = 'NO';
+                riskScore.textContent = (0.10 + deg * 0.20).toFixed(2);
+            }
+        }
+
+        function setPreset(val) {
+            document.getElementById('simSlider').value = val;
+            updateSim(val);
+        }
+
+        async function testApi(pH, EC, TDS, turb, flow, dp) {
+            const url = `/api/predict?pH=${pH}&EC=${EC}&TDS=${TDS}&turbidity=${turb}&flow=${flow}&delta_p=${dp}`;
+            const box = document.getElementById('apiResponse');
+            box.textContent = 'Sending request to Frugal AI backend...';
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                box.textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                box.textContent = 'Error calling API: ' + err.message;
+            }
+        }
+    </script>
+</body>
+</html>

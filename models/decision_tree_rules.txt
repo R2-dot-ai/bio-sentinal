@@ -1,0 +1,37 @@
+|--- turbidity <= 4.08
+|   |--- delta_p_over_flow <= 2.70
+|   |   |--- delta_p_over_flow <= 2.53
+|   |   |   |--- rolling_mean_turbidity <= 1.69
+|   |   |   |   |--- class: 0
+|   |   |   |--- rolling_mean_turbidity >  1.69
+|   |   |   |   |--- class: 0
+|   |   |--- delta_p_over_flow >  2.53
+|   |   |   |--- ec_change_from_base <= 56.23
+|   |   |   |   |--- class: 0
+|   |   |   |--- ec_change_from_base >  56.23
+|   |   |   |   |--- class: 1
+|   |--- delta_p_over_flow >  2.70
+|   |   |--- turbidity <= 1.25
+|   |   |   |--- TDS <= 329.60
+|   |   |   |   |--- class: 0
+|   |   |   |--- TDS >  329.60
+|   |   |   |   |--- class: 0
+|   |   |--- turbidity >  1.25
+|   |   |   |--- turbidity <= 3.91
+|   |   |   |   |--- class: 1
+|   |   |   |--- turbidity >  3.91
+|   |   |   |   |--- class: 1
+|--- turbidity >  4.08
+|   |--- dp_change_from_base <= 36.34
+|   |   |--- ec_change_from_base <= 185.90
+|   |   |   |--- class: 1
+|   |   |--- ec_change_from_base >  185.90
+|   |   |   |--- class: 2
+|   |--- dp_change_from_base >  36.34
+|   |   |--- delta_p_over_flow <= 6.63
+|   |   |   |--- class: 2
+|   |   |--- delta_p_over_flow >  6.63
+|   |   |   |--- dp_change_from_base <= 38.59
+|   |   |   |   |--- class: 2
+|   |   |   |--- dp_change_from_base >  38.59
+|   |   |   |   |--- class: 2
